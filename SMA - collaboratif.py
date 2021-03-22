@@ -69,7 +69,7 @@ class pool_agent(Agent):
         g = 0
         for i in range(len(pool)-1) :
             for y in pool[i+1:]:
-                g+= distance(y,pool[i])
+                g+= self.distance(y,pool[i])
                 
                 
     def solution(self):
@@ -77,7 +77,7 @@ class pool_agent(Agent):
             if isinstance(a,tab_agent) or isinstance(a,rs_agent) or isinstance(a,gen_agent):
                 solution = a.solution
                 res = -1
-                if len(self.pool)< nb_solutions :
+                if len(self.pool)< self.nb_solutions :
                     phi = 0
                     for x in self.pool:
                         phi += self.distance(x,solution)
