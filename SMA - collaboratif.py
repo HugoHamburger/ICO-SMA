@@ -549,7 +549,7 @@ class graphic_agent(Agent):
 class SMA_collab(Model):
     """A model for infection spread."""
 
-    def __init__(self, nb_pop, nb_generations, n_truck, truck_capacity, list_clients, time_matrix, n_pool):
+    def __init__(self, nb_pop, nb_generations, n_truck, truck_capacity, list_clients, time_matrix, n_pool,radius_pool):
         self.nb_pop = nb_pop
         self.nb_generations = nb_generations
         self.n_truck = n_truck
@@ -578,7 +578,7 @@ class SMA_collab(Model):
         self.schedule.add(c)
         
         # Gestion du pool
-        d = pool_agent()
+        d = pool_agent(4,self,n_pool,radius_pool)
         self.schedule.add(d)
         
         
