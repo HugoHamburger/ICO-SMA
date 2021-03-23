@@ -29,7 +29,7 @@ class Truck:
         self.y=client.y
         self.remaining_quantity -= client.quantity
      
-    def calculate_cost(self, data,listOfClients):
+    ddef calculate_cost(self, data,listOfClients):
         demande = 0
         for m in self.P:
             demande += listOfClients[m].quantity
@@ -37,7 +37,7 @@ class Truck:
         if(self.remaining_quantity<0):
             self.cost+=self.remaining_quantity*(-1)
         for i in range (len(self.P)-1):
-            self.cost += distance (self.P[i],self.P[i+1],listOfClients)
+            self.cost += distanceTab (self.P[i],self.P[i+1],listOfClients)
             self.time += data['time_matrix'][self.P[i]][self.P[i+1]]
             if self.time <= listOfClients[self.P[i+1]].start:
                 self.time = listOfClients[self.P[i+1]].start
