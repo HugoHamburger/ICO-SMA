@@ -219,7 +219,10 @@ class tab_agent(Agent):
     
 class rs_agent(Agent):
 
-    def __init__(self):
+    def __init__(self, name, model, n_truck, truck_capacity):
+        super().__init__(name,model)
+        self.n_truck = n_truck
+        self.truck_capacity = truck_capacity
         self.solution = [] # Meilleure solution à retourner en fin d'éxécution
 
 
@@ -292,8 +295,8 @@ class rs_agent(Agent):
     def random_solution(C):
         C2 = [client.name for client in C]
         q = quantity(C)
-        t = (q // truck_capacity) + 2
-        T = [Truck(i,truck_capacity,0,0) for i in range(trucks_disponibility)]
+        t = (q // self.truck_capacity) + 2
+        T = [Truck(i,self.truck_capacity,0,0) for i in range(self.trucks_disponibility)]
         R = []
         C_bis = C2.copy()
         for i in range(t-1):
@@ -575,7 +578,7 @@ class SMA_collab(Model):
         b = tab_agent(2,self)
         self.schedule.add(b)
         
-        c = rs_agent(...)
+        c = rs_agent(3, self, n_trucks, truck_capacity)
         self.schedule.add(c)
         
         # Gestion du pool
