@@ -370,7 +370,7 @@ class rs_agent(Agent):
         T = weight_K * K + weight_q * q + weight_t * t + weight_d * d + weight_c * c
         return T
 
-    def algo_RS(C,M_time,start_solution = random_solution(C), n=100_000, weight_K=10_000, weight_q=10_000, weight_t=3, weight_d=13, weight_c=10):
+    def algo_RS(C,M_time,start_solution = random_solution(self.model.list_clients), n=100_000, weight_K=10_000, weight_q=10_000, weight_t=3, weight_d=13, weight_c=10):
         M = cost_matrix(C)
         R = convert_solution(start_solution)
         T = cost_function(R,M,M_time,C, weight_K, weight_q, weight_t, weight_d, weight_c)
