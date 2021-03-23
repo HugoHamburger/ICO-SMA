@@ -3,7 +3,7 @@
 SMA Collaboration
 
 """
-from classes.py import Client, Truck
+from classes.py import Client, Truck, TruckTab
 
 from mesa import Agent
 from mesa import Model
@@ -46,7 +46,7 @@ class tab_agent(Agent):
             self.num_truck = num_truck
             self.T = []
             for i in range (num_truck):
-                truck = Truck (i,truck_capacity)
+                truck = TruckTab (i,truck_capacity)
                 self.T.append(truck)
 
     def __init__(self, name, model):
@@ -98,7 +98,7 @@ class tab_agent(Agent):
     def voisinage_simple (self,parcours, num_truck, data,listOfClients):
         copie_parcours=parcours+[]
         vs=[parcours]
-        truck= Truck(num_truck+1,self.model.truck_capacity)
+        truck= TruckTab(num_truck+1,self.model.truck_capacity)
         truck.P = parcours
         cost=[truck.calculate_cost(data,listOfClients)]
         for i in range (1,len(copie_parcours)-1):
@@ -154,12 +154,12 @@ class tab_agent(Agent):
             cost=0
             for j in range (len(sol_actuelle)):
                 if i==j:
-                    truck = Truck(num_truck+1, self.model.truck_capacity)
+                    truck = TruckTab(num_truck+1, self.model.truck_capacity)
                     truck.P = self.voisinage_simple(sol_actuelle[i], num_truck, data,listOfClients)
                     ens_vs.append(truck.P)
                     cost+= truck.calculate_cost(data,listOfClients)
                 else:
-                    truck = Truck(num_truck+1, self.model.truck_capacity)
+                    truck = TruckTab(num_truck+1, self.model.truck_capacity)
                     truck.P = sol_actuelle[j]
                     cost+= truck.calculate_cost(data,listOfClients)
                     ens_vs.append(sol_actuelle[j])
