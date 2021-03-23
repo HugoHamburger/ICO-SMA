@@ -642,7 +642,7 @@ class rs_agent(Agent):
             if isinstance(a,pool_agent):
                 if len(a.pool) ==a.nb_solutions:
                     i = rd.randint(0, a.nb_solutions-1)
-                    self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix,a.pool(i))[0])
+                    self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix,a.pool[i])[0])
                 else:
                     self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix)[0])
         
