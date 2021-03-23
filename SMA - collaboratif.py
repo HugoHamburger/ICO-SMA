@@ -57,6 +57,11 @@ class tab_agent(Agent):
         return(np.sqrt((listOfClients[C1].y-listOfClients[C2].y)**2 + (listOfClients[C1].x - listOfClients[C2].x)**2))
 
     def solution_initiale (num_truck,listOfClients,data):
+        for a in self.model.schedule.agents:
+            if isinstance(a,pool_agent):
+                if len(a.pool) ==a.nb_solutions:
+                    i = rd.randint(0, a.nb_solutions-1)
+                    return a.pool[i]
         S=[]
         depot = Depot(num_truck)
         clients = [i for i in range (1,len(data['time_matrix']))]
