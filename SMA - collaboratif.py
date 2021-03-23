@@ -46,7 +46,8 @@ class tab_agent(Agent):
                 truck = Truck (i, self.model.truck_capacity)
                 self.T.append(truck)
 
-    def __init__(self):
+    def __init__(self, name, model):
+        super().__init__(name,model)
         self.solution = [] # Meilleure solution à retourner en fin d'éxécution
         
     def step(self):
@@ -571,7 +572,7 @@ class SMA_collab(Model):
         a = gen_agent(nb_pop, nb_generations, n_trucks, truck_capacity,list_clients)
         self.schedule.add(a)
         
-        b = tab_agent(...)
+        b = tab_agent(2,self)
         self.schedule.add(b)
         
         c = rs_agent(...)
