@@ -104,7 +104,7 @@ class tab_agent(Agent):
         for i in range (1,len(copie_parcours)-1):
             for j in range (1,len(copie_parcours)-1):
                 if i < j:
-                    truck = Truck(num_truck+2,self.model.truck_capacity)
+                    truck = TruckTab(num_truck+2,self.model.truck_capacity)
                     copie_parcours=self.simple_permut(copie_parcours,i,j)
                     vs.append(copie_parcours)
                     truck.P = copie_parcours
