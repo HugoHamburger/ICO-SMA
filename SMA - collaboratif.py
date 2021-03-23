@@ -119,7 +119,7 @@ class tab_agent(Agent):
         return vs[index_opti]
 
     
-     def voisinage_complexe (self,ens_parcours, num_truck, data,tabou,listOfClients):
+    def voisinage_complexe (self,ens_parcours, num_truck, data,tabou,listOfClients):
         copie_ens_parcours=ens_parcours+[]
         vc=[]
         list_tot_cost=[]
