@@ -40,9 +40,180 @@ class gen_agent(Agent):
         self.best_solution = self.population[0][1]
                 
 class tab_agent(Agent):
-    
+    class Depot:
+        def __init__(self, num_truck):
+            self.x = 0
+            self.y = 0
+            self.num_truck = num_truck
+            self.T = []
+            for i in range (num_truck):
+                truck = Truck (i, self.model.truck_capacity)
+                self.T.append(truck)
+
     def __init__(self):
         self.solution = [] # Meilleure solution à retourner en fin d'éxécution
+        
+    def step(self):
+        sol =(algo_tabou (200, 20,self.model.n_truck,self.model.list_clients))
+        self.solution = sol[0]
+        
+    def distance(C1, C2, listOfClients):
+    return(np.sqrt((listOfClients[C1].y-listOfClients[C2].y)**2 + (listOfClients[C1].x - listOfClients[C2].x)**2))
+
+    def solution_initiale (num_truck,listOfClients,data):
+    S=[]
+    depot = Depot(num_truck)
+    clients = [i for i in range (1,len(data['time_matrix']))]
+    while len (clients) != 0:
+        for k in range (len (depot.T)):
+            if len (clients) != 0:
+                j = rd.randint (0,len(clients)-1)
+                depot.T[k].P.append(clients[j])
+                clients.remove(clients[j])
+
+    for k in range (len(depot.T)):
+        depot.T[k].P.append(0)
+    for i in range (num_truck):
+        S.append(depot.T[i].P)
+    return (total_cost(depot,data,listOfClients),S)
+    
+                    
+    def total_cost (depot, data,listOfClients):
+        total_cost = 0
+        for i in range (depot.num_truck):
+            (depot.T[i]).calculate_cost(data,listOfClients)
+            total_cost += depot.T[i].cost
+        return total_cost
+
+    def simple_permut (P, old, new):
+        temp = P[old]
+        P.remove(P[old])
+        P.insert(new,temp)
+        return P
+
+    def voisinage_simple (parcours, num_truck, data,listOfClients):
+        copie_parcours=parcours+[]
+        vs=[parcours]
+        truck= Truck(num_truck+1,15)
+        truck.P = parcours
+        cost=[truck.calculate_cost(data,listOfClients)]
+        for i in range (1,len(copie_parcours)-1):
+            for j in range (1,len(copie_parcours)-1):
+                if i < j:
+                    truck = Truck(num_truck+2,15)
+                    copie_parcours=simple_permut(copie_parcours,i,j)
+                    vs.append(copie_parcours)
+                    truck.P = copie_parcours
+                    cost.append(truck.calculate_cost(data,listOfClients))
+                    copie_parcours=parcours+[]
+        mini=cost[0]
+        index_opti=0
+        for k in range (1,len(cost)):
+            if cost[k]<mini:
+                mini=cost[k]
+                index_opti=k
+        return vs[index_opti]
+
+    
+    def voisinage_complexe (ens_parcours, num_truck, data,tabou,listOfClients):
+        copie_ens_parcours=ens_parcours+[]
+        vc=[]
+        list_tot_cost=[]
+        for i in range (len(ens_parcours)):
+            for j in range (len(ens_parcours)):
+                if i != j:
+                    for k in range (1,len(copie_ens_parcours[i])-1):
+                        for l in range (1,len(copie_ens_parcours[j])-1):
+                            (a,b) = transfert(copie_ens_parcours[i],copie_ens_parcours[j],k,l)
+                            ens_parcours_to_add=[]
+                            depot0 = Depot (num_truck)
+                            for w in range (len(copie_ens_parcours)):
+                                if w == i :
+                                    ens_parcours_to_add.append(a)
+                                    depot0.T[w].P=a
+                                elif w == j :
+                                    ens_parcours_to_add.append(b)
+                                    depot0.T[w].P=b
+                                else:
+                                    ens_parcours_to_add.append(copie_ens_parcours[w])
+                                    depot0.T[w].P=copie_ens_parcours[w]
+                            vc.append(ens_parcours_to_add)
+                            list_tot_cost.append(total_cost(depot0,data,listOfClients))
+        return (list_tot_cost, vc)                                      
+                    
+            
+    def best_voisinage (num_truck, data,sol_actuelle,tabou,best_saved_cost,listOfClients):
+        all_ens_vs=[]
+        all_cost=[]
+        for i in range (len(sol_actuelle)):
+            ens_vs=[]
+            cost=0
+            for j in range (len(sol_actuelle)):
+                if i==j:
+                    truck = Truck(num_truck+1, 15)
+                    truck.P = voisinage_simple(sol_actuelle[i], num_truck, data,listOfClients)
+                    ens_vs.append(truck.P)
+                    cost+= truck.calculate_cost(data,listOfClients)
+                else:
+                    truck = Truck(num_truck+1, 15)
+                    truck.P = sol_actuelle[j]
+                    cost+= truck.calculate_cost(data,listOfClients)
+                    ens_vs.append(sol_actuelle[j])
+            all_ens_vs.append(ens_vs)
+            all_cost.append(cost)
+
+        (cost_vc,vc)=voisinage_complexe(sol_actuelle,num_truck,data,tabou,listOfClients)
+        all_ens_vs = all_ens_vs+vc
+        all_cost = all_cost+cost_vc
+        (all_ens_vs,all_cost) = sol_filter(data,sol_actuelle,tabou,all_ens_vs,all_cost,best_saved_cost)
+        if(len(all_ens_vs)>0):
+            min_cost=all_cost[0]
+            index_best_cost=0
+            for i in range (len(all_cost)):
+                if (all_cost[i] < min_cost):
+                    min_cost = all_cost[i]
+                    index_best_cost = i
+            return (all_cost[index_best_cost],all_ens_vs[index_best_cost])
+        else:
+            return (0,[])
+    
+    def sol_filter(data,sol_actuelle,tabou,all_ens_vs,all_cost,best_saved_cost):
+        new_sol =[]
+        new_sol_cost=[]
+        for i in range (len(all_ens_vs)):
+            if((sol_actuelle,all_ens_vs[i])not in tabou or all_cost[i]<best_saved_cost):
+                new_sol.append(all_ens_vs[i])
+                new_sol_cost.append(all_cost[i])
+        return (new_sol,new_sol_cost)
+
+    def transfert (P1, P2, old_pos, new_pos):
+        copy_P1=P1+[]
+        copy_P2=P2+[]
+        temp = copy_P1[old_pos]
+        copy_P1.remove(copy_P1[old_pos])
+        copy_P2.insert(new_pos,temp)
+        return (copy_P1,copy_P2)  
+
+     def algo_tabou (nb_iter, max_tabou_size,number_trucks,listOfClients):
+        curr_cost =0
+        curr_sol=[]
+        tabou =[]
+        data = create_data_model()
+        (curr_cost,curr_sol) = solution_initiale(number_trucks,listOfClients,data)
+        best_sol=curr_sol
+        best_cost=curr_cost
+        for i in range(nb_iter):
+            (curr_cost,best_curr_neigh) = best_voisinage(number_trucks,data,curr_sol,tabou,best_cost,listOfClients)
+            if(curr_cost==0):
+                break
+            if(len(tabou)>=max_tabou_size):
+                tabou.pop(0)
+            tabou.append((best_curr_neigh,curr_sol))
+            curr_sol=best_curr_neigh
+            if(curr_cost<best_cost):
+                best_cost=curr_cost
+                best_sol=curr_sol
+        return best_sol,best_cost
     
 class rs_agent(Agent):
 
