@@ -439,8 +439,8 @@ class rs_agent(Agent):
         
         
 class pool_agent(Agent):
-    def __init__(self, id, model, nb_solutions,pool_radius):
-        super().__init__(id,model)
+    def __init__(self, name, model, nb_solutions,pool_radius):
+        super().__init__(name,model)
         self.nb_solutions = nb_solutions
         self.pool = []
         self.pr = pool_radius
