@@ -13,6 +13,9 @@ from evolution_functions import next_gen, init_pop, merge_sort
 from constants import nb_generations, nb_pop, n_trucks, truck_capacity, mutation_rate, list_clients
 from evaluation_functions import truck_track_constructor, track_to_member
 import matplotlib.pyplot as plt
+import random as rd
+
+
     
 class gen_agent(Agent):
     
@@ -252,6 +255,7 @@ class rs_agent(Agent):
     ###################################### Step #######################################
 
     def step(self):
+<<<<<<< HEAD
         self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix)[0])
     def __init__(self):
         self.solution = [] # Meilleure solution à retourner en fin d'éxécution
@@ -463,10 +467,17 @@ class rs_agent(Agent):
 
     def step(self):
         self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix)[0])
+=======
+        
+>>>>>>> c1ebd097dc5024c861e8f658b6dd1f35a97504d6
         #prendre un solution aléatoirement dans le pool
-        #for a in self.model.schedule.agents:
-        #    if isinstance(a,pool_agent):
-        #        a.pool
+        for a in self.model.schedule.agents:
+            if isinstance(a,pool_agent):
+                if len(a.pool) ==a.nb_solutions:
+                    i = rd.randint(0, a.nb_solutions-1)
+                    self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix,a.pool(i))[0])
+                else:
+                    self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix)[0])
         
         
 class pool_agent(Agent):
@@ -534,8 +545,6 @@ class graphic_agent(Agent):
     def __init__(self, best_solution, list_clients):
         self.best_solution = best_solution
         self.list_clients = list_clients        
-        X=[1]
-        Y=[population[0][1]]
         
     def draw_graph():
         track=truck_track_constructor(self.best_solution)
