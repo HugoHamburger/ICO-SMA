@@ -9,7 +9,7 @@ from mesa import Agent
 from mesa import Model
 from mesa.time import BaseScheduler
 from mesa.datacollection import DataCollector
-
+import random as rd
 
 
     
@@ -102,7 +102,6 @@ class rs_agent(Agent):
                 del(solution[i][-1])
             for i in range(len(solution),trucks_disponibility+1):
                 solution.append(Truck(i,truck_capacity,0,0))
-        return solution
 
     #################################### RS Algorithm #####################################
     def random_solution(C):
@@ -245,11 +244,15 @@ class rs_agent(Agent):
     ###################################### Step #######################################
 
     def step(self):
-        self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix)[0])
+        
         #prendre un solution aléatoirement dans le pool
-        #for a in self.model.schedule.agents:
-        #    if isinstance(a,pool_agent):
-        #        a.pool
+        for a in self.model.schedule.agents:
+            if isinstance(a,pool_agent):
+                if len(a.pool) ==a.nb_pool:
+                    i = rd.randint(0, a.nb_pool-1)
+                    self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix,a.pool(i))[0])
+                else:
+                    self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix)[0])
         
         
 class pool_agent(Agent):
