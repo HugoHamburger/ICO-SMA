@@ -102,6 +102,7 @@ class rs_agent(Agent):
                 del(solution[i][-1])
             for i in range(len(solution),trucks_disponibility+1):
                 solution.append(Truck(i,truck_capacity,0,0))
+        return solution
 
     #################################### RS Algorithm #####################################
     def random_solution(C):
