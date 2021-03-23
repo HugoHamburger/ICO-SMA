@@ -200,7 +200,7 @@ class tab_agent(Agent):
         curr_cost =0
         curr_sol=[]
         tabou =[]
-        data = create_data_model()
+        data = self.model.time_matrix
         (curr_cost,curr_sol) = solution_initiale(number_trucks,listOfClients,data)
         best_sol=curr_sol
         best_cost=curr_cost
