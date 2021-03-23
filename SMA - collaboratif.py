@@ -119,7 +119,7 @@ class rs_agent(Agent):
         C2 = [client.name for client in C]
         q = quantity(C)
         t = (q // truck_capacity) + 2
-        T = [Truck(i,truck_capacity,0,0) for i in range(trucks_disponibility)]
+        T = [Truck(i,self.model.truck_capacity,0,0) for i in range(self.model.n_truck)]
         R = []
         C_bis = C2.copy()
         for i in range(t-1):
