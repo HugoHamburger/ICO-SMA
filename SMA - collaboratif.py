@@ -54,7 +54,7 @@ class tab_agent(Agent):
         self.solution = [] # Meilleure solution à retourner en fin d'éxécution
         
     def step(self):
-        sol =(algo_tabou (200, 20,self.model.n_truck,self.model.list_clients))
+        sol =(self.algo_tabou (200, 20,self.model.n_truck,self.model.list_clients))
         self.solution = sol[0]
         
 
