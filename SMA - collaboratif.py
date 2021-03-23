@@ -697,7 +697,7 @@ class pool_agent(Agent):
                         pool_test = pool.copy()
                         pool_test[i] = solution
                         g_bis = self.eval_function(pool_test)
-                        if g_bis < g :
+                        if g_bis > g :
                             g = g_bis
                             res = i
                             
