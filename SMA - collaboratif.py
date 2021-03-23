@@ -40,13 +40,13 @@ def distanceTab(C1, C2, listOfClients):
     
 class tab_agent(Agent):
     class Depot:
-        def __init__(self, num_truck):
+        def __init__(self, num_truck,truck_capacity):
             self.x = 0
             self.y = 0
             self.num_truck = num_truck
             self.T = []
             for i in range (num_truck):
-                truck = Truck (i, self.model.truck_capacity)
+                truck = Truck (i,truck_capacity)
                 self.T.append(truck)
 
     def __init__(self, name, model):
@@ -66,7 +66,7 @@ class tab_agent(Agent):
                     i = rd.randint(0, a.nb_solutions-1)
                     return a.pool[i]
         S=[]
-        depot = self.Depot(num_truck)
+        depot = self.Depot(num_truck,self.model.truck_capacity)
         clients = [i for i in range (1,len(data))]
         while len (clients) != 0:
             for k in range (len (depot.T)):
@@ -98,13 +98,13 @@ class tab_agent(Agent):
     def voisinage_simple (self,parcours, num_truck, data,listOfClients):
         copie_parcours=parcours+[]
         vs=[parcours]
-        truck= Truck(num_truck+1,15)
+        truck= Truck(num_truck+1,self.model.truck_capacity)
         truck.P = parcours
         cost=[truck.calculate_cost(data,listOfClients)]
         for i in range (1,len(copie_parcours)-1):
             for j in range (1,len(copie_parcours)-1):
                 if i < j:
-                    truck = Truck(num_truck+2,15)
+                    truck = Truck(num_truck+2,self.model.truck_capacity)
                     copie_parcours=self.simple_permut(copie_parcours,i,j)
                     vs.append(copie_parcours)
                     truck.P = copie_parcours
@@ -130,7 +130,7 @@ class tab_agent(Agent):
                         for l in range (1,len(copie_ens_parcours[j])-1):
                             (a,b) =self.transfert(copie_ens_parcours[i],copie_ens_parcours[j],k,l)
                             ens_parcours_to_add=[]
-                            depot0 = self.Depot (num_truck)
+                            depot0 = self.Depot(num_truck,self.model.truck_capacity)
                             for w in range (len(copie_ens_parcours)):
                                 if w == i :
                                     ens_parcours_to_add.append(a)
@@ -154,12 +154,12 @@ class tab_agent(Agent):
             cost=0
             for j in range (len(sol_actuelle)):
                 if i==j:
-                    truck = Truck(num_truck+1, 15)
+                    truck = Truck(num_truck+1, self.model.truck_capacity)
                     truck.P = self.voisinage_simple(sol_actuelle[i], num_truck, data,listOfClients)
                     ens_vs.append(truck.P)
                     cost+= truck.calculate_cost(data,listOfClients)
                 else:
-                    truck = Truck(num_truck+1, 15)
+                    truck = Truck(num_truck+1, self.model.truck_capacity)
                     truck.P = sol_actuelle[j]
                     cost+= truck.calculate_cost(data,listOfClients)
                     ens_vs.append(sol_actuelle[j])
