@@ -3,7 +3,7 @@
 SMA Collaboration
 
 """
-
+from classes.py import Client, Truck
 
 from mesa import Agent
 from mesa import Model
