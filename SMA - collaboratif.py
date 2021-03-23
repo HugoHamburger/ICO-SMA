@@ -198,7 +198,7 @@ class tab_agent(Agent):
         copy_P2.insert(new_pos,temp)
         return (copy_P1,copy_P2)  
 
-     def algo_tabou (self,nb_iter, max_tabou_size,number_trucks,listOfClients):
+    def algo_tabou (self,nb_iter, max_tabou_size,number_trucks,listOfClients):
         curr_cost =0
         curr_sol=[]
         tabou =[]
