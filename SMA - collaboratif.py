@@ -21,8 +21,8 @@ class gen_agent(Agent):
     
     def __init__(self, nb_pop, nb_generations, n_truck, truck_capacity, list_clients):
         self.nb_pop = nb_pop
-        self.nb_generations =  [2,nb_generations]
-        self.n_truck = n_truck
+        self.nb_generations =  nb_generations
+        self.n_trucks = n_trucks
         self.truck_capacity = truck_capacity
         self.list_clients = list_clients
         self.time_matrix = time_matrix     
@@ -31,8 +31,8 @@ class gen_agent(Agent):
         self.solution = self.population[0]
     
     def step(self):
-        self.population = next_gen(self.population)
-        self.nb_generations[0]+=1
+        for i in range(2,nb_generations+1):
+            self.population = next_gen(self.population)
         self.solution = self.population[0]
                 
 class tab_agent(Agent):
