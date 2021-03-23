@@ -638,10 +638,6 @@ class rs_agent(Agent):
     ###################################### Step #######################################
 
     def step(self):
-        self.solution = closing_tour(algo_RS(self.model.list_clients, self.model.time_matrix)[0])
-=======
-        
->>>>>>> c1ebd097dc5024c861e8f658b6dd1f35a97504d6
         #prendre un solution aléatoirement dans le pool
         for a in self.model.schedule.agents:
             if isinstance(a,pool_agent):
