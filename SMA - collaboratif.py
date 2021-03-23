@@ -58,24 +58,24 @@ class tab_agent(Agent):
         self.solution = sol[0]
         
     def distance(C1, C2, listOfClients):
-    return(np.sqrt((listOfClients[C1].y-listOfClients[C2].y)**2 + (listOfClients[C1].x - listOfClients[C2].x)**2))
+        return(np.sqrt((listOfClients[C1].y-listOfClients[C2].y)**2 + (listOfClients[C1].x - listOfClients[C2].x)**2))
 
     def solution_initiale (num_truck,listOfClients,data):
-    S=[]
-    depot = Depot(num_truck)
-    clients = [i for i in range (1,len(data['time_matrix']))]
-    while len (clients) != 0:
-        for k in range (len (depot.T)):
-            if len (clients) != 0:
-                j = rd.randint (0,len(clients)-1)
-                depot.T[k].P.append(clients[j])
-                clients.remove(clients[j])
+        S=[]
+        depot = Depot(num_truck)
+        clients = [i for i in range (1,len(data['time_matrix']))]
+        while len (clients) != 0:
+            for k in range (len (depot.T)):
+                if len (clients) != 0:
+                    j = rd.randint (0,len(clients)-1)
+                    depot.T[k].P.append(clients[j])
+                    clients.remove(clients[j])
 
-    for k in range (len(depot.T)):
-        depot.T[k].P.append(0)
-    for i in range (num_truck):
-        S.append(depot.T[i].P)
-    return (total_cost(depot,data,listOfClients),S)
+        for k in range (len(depot.T)):
+            depot.T[k].P.append(0)
+        for i in range (num_truck):
+            S.append(depot.T[i].P)
+        return (total_cost(depot,data,listOfClients),S)
     
                     
     def total_cost (depot, data,listOfClients):
