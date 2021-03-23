@@ -55,3 +55,5 @@ class TruckTab:
             if self.time >= listOfClients[self.P[i+1]].stop:
                 self.cost += self.time - listOfClients[self.P[i+1]].stop
         return self.cost
+def distanceTab(C1, C2, listOfClients):
+        return(np.sqrt((listOfClients[C1].y-listOfClients[C2].y)**2 + (listOfClients[C1].x - listOfClients[C2].x)**2))
