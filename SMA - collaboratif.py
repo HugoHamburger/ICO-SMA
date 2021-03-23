@@ -14,7 +14,7 @@ from constants import nb_generations, nb_pop, n_trucks, truck_capacity, mutation
 from evaluation_functions import truck_track_constructor, track_to_member
 import matplotlib.pyplot as plt
 import random as rd
-
+import numpy as np
 
     
 class gen_agent(Agent):
