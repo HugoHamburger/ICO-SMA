@@ -28,16 +28,12 @@ class gen_agent(Agent):
         self.time_matrix = time_matrix     
         self.solution = [] # Meilleure solution à retourner en fin d'éxécution        
         self.population = init_pop(nb_pop)
-        self.X=[1]
-        self.Y=[self.population[0][1]]
-        self.best_solution = self.population[0][1]
+        self.solution = self.population[0]
     
     def step(self):
         self.population = next_gen(self.population)
-        self.X.append(self.nb_generations[0])
         self.nb_generations[0]+=1
-        self.Y.append(self.population[0][1])
-        self.best_solution = self.population[0][1]
+        self.solution = self.population[0]
                 
 class tab_agent(Agent):
     class Depot:
@@ -713,12 +709,12 @@ class pool_agent(Agent):
       
 class graphic_agent(Agent):
     
-    def __init__(self, best_solution, list_clients):
-        self.best_solution = best_solution
+    def __init__(self, solution, list_clients):
+        self.solution = solution
         self.list_clients = list_clients        
         
     def draw_graph():
-        track=truck_track_constructor(self.best_solution)
+        track=truck_track_constructor(self.solution)
         list_clients = self.list_cients
         y = [0]
         z = [0]
@@ -751,8 +747,8 @@ class graphic_agent(Agent):
         for i, txt in enumerate(n):
     
             plt.annotate(txt, (list_clients[i].x, list_clients[i].y))
-            plt.title("Score : "+str(self.best_solution[1])+" | "+str(n_trucks)+" camions d'une capacité de " + str(truck_capacity) + "\nOrdonnancement : " + str(self.best_solution[0]))
-            plt.savefig(str(self.population[1])+'_chemin.png', format='png') 
+            plt.title("Score : "+str(self.solution[1])+" | "+str(n_trucks)+" camions d'une capacité de " + str(truck_capacity) + "\nOrdonnancement : " + str(self.solution[0]))
+            plt.savefig(str(self.solution[1])+'_chemin.png', format='png') 
             
         def step():
             draw_graph()
