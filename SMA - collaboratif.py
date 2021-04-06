@@ -221,7 +221,7 @@ class tab_agent(Agent):
     
 class rs_agent(Agent):
 
-    def __init__(self, name, n_truck, truck_capacity):
+    def __init__(self, name, model, n_truck, truck_capacity):
         super().__init__(name,model)
         self.n_truck = n_truck
         self.truck_capacity = truck_capacity
