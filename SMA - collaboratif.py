@@ -19,21 +19,24 @@ import numpy as np
     
 class gen_agent(Agent):
     
-    def __init__(self, nb_pop, nb_generations, n_truck, truck_capacity, list_clients):
+    def __init__(self,unique_id,model, nb_pop, nb_generations, n_truck, truck_capacity, list_clients):
+        super().__init__(unique_id,model)
         self.nb_pop = nb_pop
         self.nb_generations =  nb_generations
         self.n_trucks = n_trucks
         self.truck_capacity = truck_capacity
         self.list_clients = list_clients
         self.time_matrix = time_matrix     
-        self.solution = [] # Meilleure solution à retourner en fin d'éxécution        
+        self.best_solution = [] # Meilleure solution à retourner en fin d'éxécution        
         self.population = init_pop(nb_pop)
-        self.solution = self.population[0]
+        self.solution = truck_track_constructor(self.population[0])
+        
+        
     
     def step(self):
         for i in range(2,nb_generations+1):
             self.population = next_gen(self.population)
-        self.solution = self.population[0]
+        self.solution = truck_track_constructor(self.population[0])
       
 def distanceTab(C1, C2, listOfClients):
         return(np.sqrt((listOfClients[C1].y-listOfClients[C2].y)**2 + (listOfClients[C1].x - listOfClients[C2].x)**2))
@@ -574,14 +577,16 @@ class SMA_collab(Model):
         #tester SimultaneousActivation (qui permet d'activer tous les agents en mêê temps)
         self.schedule = BaseScheduler(self)
 
-        a = gen_agent(nb_pop, nb_generations, n_trucks, truck_capacity,list_clients)
+        a = gen_agent(1,self,nb_pop, nb_generations, n_trucks, truck_capacity,list_clients)
         self.schedule.add(a)
         
-        b = tab_agent(2,self)
-        self.schedule.add(b)
+
         
-        c = rs_agent(3, self, n_trucks, truck_capacity)
-        self.schedule.add(c)
+        # b = tab_agent(2,self)
+        # self.schedule.add(b)
+        
+        # c = rs_agent(3, self, n_trucks, truck_capacity)
+        # self.schedule.add(c)
         
         # Gestion du pool
         d = pool_agent(4,self,n_pool,radius_pool)
@@ -589,17 +594,31 @@ class SMA_collab(Model):
         
         
         # Gestion des courbes
-        e1 = graphic_agent(a.best_solution, self.list_clients)
-        e2 = graphic_agent(b.solution, self.list_clients)
-        e3 = graphic_agent(c.solution, self.list_clients)
+        e1 = graphic_agent(5,self,a.solution, self.list_clients)
+        # e2 = graphic_agent(6,self,b.solution, self.list_clients)
+        # e3 = graphic_agent(7,self,c.solution, self.list_clients)
         #e = graphic_agent()
         self.schedule.add(e1)
-        self.schedule.add(e2)
-        self.schedule.add(e3)
+        # self.schedule.add(e2)
+        # self.schedule.add(e3)
         
     def step(self):
         #passage de l'instant t à l'instant (t+1)
         self.schedule.step()
+        # print(model.schedule.agents[1].pool)
+
+steps=20 
+
+n_truck = 4
+n_pool = 10
+radius_pool = 10
+
+model = SMA_collab(nb_pop, nb_generations, n_truck, truck_capacity, list_clients, time_matrix, n_pool,radius_pool)
+
+for i in range(steps):
+    model.step()       
+
+        
         
 
 
