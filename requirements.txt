@@ -1,0 +1,5 @@
+mesa
+xlrd
+osmnx
+numpy
+matplotlib.pyplot
